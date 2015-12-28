@@ -1,0 +1,35 @@
+import com.openbravo.pos.payment.PaymentInfo;
+import javax.swing.JOptionPane;
+
+boolean isCash = false;
+boolean isVoucher = false;
+String changeText = "";
+double change;
+
+for (i=0; i<ticket.payments.size(); i++) {
+    PaymentInfo p = ticket.payments.get(i);
+
+    if ("paperin".equals(p.getName())) {
+        isCash = false;
+		isVoucher = true;
+        change = p.getChange();
+        changeText = p.printChange();
+    }
+
+    if ("cash".equals(p.getName())) {
+        isCash = true;
+		isVoucher = false;
+        change = p.getChange();
+        changeText = p.printChange();
+    }
+}
+if( (isCash || isVoucher) && change > 0) {
+    if (isCash) {
+        sales.openDrawer();
+        JOptionPane.showMessageDialog(null, "Bitte Rückgeld " + changeText + " geben.", "Wechselgeld", JOptionPane.PLAIN_MESSAGE);
+    } else {
+        JOptionPane.showMessageDialog(null, "Bitte Restbetrag " + changeText + " in den Gutschein eintragen und diesen dem Kunden zurückgeben. \nRestbeträge werden nicht in Bar ausbezahlt.", "Restbetrag Gutschein", JOptionPane.PLAIN_MESSAGE);
+    }
+}
+
+sales.printerStart();
